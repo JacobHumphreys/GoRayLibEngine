@@ -12,12 +12,15 @@ type Sprite struct {
 	*nodes2d.Node2d
 	Texture rl.Texture2D
 	Hidden  bool
+	FlipH   bool
 }
 
 func (Sprite) Init(path string, node2d *nodes2d.Node2d) *Sprite {
 	return &Sprite{
-		Texture: rl.LoadTexture(path),
 		Node2d:  node2d,
+		Texture: rl.LoadTexture(path),
+		Hidden:  false,
+		FlipH:   false,
 	}
 }
 
@@ -26,7 +29,7 @@ func (s *Sprite) Destroy() {
 }
 
 func (s Sprite) Process(delta float32) {}
-func (s Sprite) Input() {}
+func (s Sprite) Input()                {}
 
 func (s *Sprite) GetChildrenTree() scenes.Hierarchy {
 	return scenes.Hierarchy{

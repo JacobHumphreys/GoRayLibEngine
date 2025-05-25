@@ -10,6 +10,8 @@ type AnimatedSprite struct {
 	*Sprite
 	CurrentFrame   int
 	NumberOfFrames int
+	Hidden         bool
+	FlipH          bool
 }
 
 func (AnimatedSprite) Init(sprite *Sprite, currentFrame, frameCount int) *AnimatedSprite {
@@ -24,12 +26,19 @@ func (s AnimatedSprite) Input() {}
 
 func (s AnimatedSprite) Process(delta float32) {}
 
-func (s *AnimatedSprite) Destroy() {}
+func (s *AnimatedSprite) Destroy() {
+    s.Sprite.Destroy()
+}
 
 func (s AnimatedSprite) Draw() {
 	if !s.Sprite.Hidden {
 		s.Sprite.Hidden = true
 	}
+
+	if s.Hidden {
+		return
+	}
+
 	rl.DrawTexturePro(
 		s.Texture,
 		s.getSourceRec(),
@@ -47,7 +56,11 @@ func (s AnimatedSprite) getFrameSize() (frameSize float32) {
 
 func (s AnimatedSprite) getSourceRec() rl.Rectangle {
 	framePosition := s.getFrameSize() * float32(s.CurrentFrame)
-	return rl.NewRectangle(framePosition, 0, s.getFrameSize(), float32(s.Texture.Height))
+    frameWidth:= s.getFrameSize()
+	if s.FlipH {
+        frameWidth *= -1 
+	}
+	return rl.NewRectangle(framePosition, 0, frameWidth, float32(s.Texture.Height))
 }
 
 func (s AnimatedSprite) getDestRec() rl.Rectangle {
@@ -74,8 +87,8 @@ func (s *AnimatedSprite) GetChildrenTree() scenes.Hierarchy {
 func (s *AnimatedSprite) Center() {
 	s.Offset(
 		rl.NewVector2(
-			(0 - s.getFrameSize()/2 * s.LocalScale.X),
-			(0 - float32(s.Texture.Height)/2 * s.LocalScale.Y),
+			(0 - s.getFrameSize()/2*s.LocalScale.X),
+			(0 - float32(s.Texture.Height)/2*s.LocalScale.Y),
 		),
 	)
 }
