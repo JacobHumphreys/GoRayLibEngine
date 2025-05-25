@@ -3,7 +3,7 @@ package scenes
 import (
 	"slices"
 
-	"github.com/Tigy01/GoRayLibEngine/nodes"
+	"github.com/JacobHumphreys/GoRayLibEngine/nodes"
 )
 
 type Scene interface {
